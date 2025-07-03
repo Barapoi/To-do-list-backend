@@ -1,3 +1,4 @@
+// Fetch all todos when the page loads
 document.addEventListener('DOMContentLoaded', fetchTodos);
 
 function fetchTodos() {
@@ -58,13 +59,10 @@ function createTodoItem(todo) {
 }
 
 function toggleComplete(id, completed) {
+    // Find the todo item in the list to get its current title
     const todoItem = Array.from(document.getElementById('todoList').children)
-        .find(item => item.querySelector('button.delete-btn').getAttribute('onclick').includes(`deleteTodo(${id})`));
-    
-    if (!todoItem) return;
-
-    const title = todoItem.querySelector('span').textContent.trim();
-    
+        .find(item => item.querySelector('span').textContent.trim() === item.querySelector('span').textContent.trim());
+    const title = todoItem ? todoItem.querySelector('span').textContent.trim() : '';
     fetch(`/api/todos/${id}`, {
         method: 'PUT',
         headers: {
@@ -76,7 +74,6 @@ function toggleComplete(id, completed) {
     .then(() => fetchTodos())
     .catch(error => console.error('Error updating todo:', error));
 }
-
 
 function deleteTodo(id) {
     fetch(`/api/todos/${id}`, {
@@ -113,7 +110,7 @@ function editTodo(id, spanElement) {
 
 function saveEditedTodo(id, newTitle) {
     const todoItem = Array.from(document.getElementById('todoList').children)
-        .find(item => item.querySelector('input[type="text"]'));
+        .find(item => item.querySelector('input'));
     if (todoItem) {
         fetch(`/api/todos/${id}`, {
             method: 'PUT',
