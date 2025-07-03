@@ -59,12 +59,16 @@ function createTodoItem(todo) {
 }
 
 function toggleComplete(id, completed) {
+    // Find the todo item in the list to get its current title
+    const todoItem = Array.from(document.getElementById('todoList').children)
+        .find(item => item.querySelector('span').textContent.trim() === item.querySelector('span').textContent.trim());
+    const title = todoItem ? todoItem.querySelector('span').textContent.trim() : '';
     fetch(`/api/todos/${id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ completed: completed })
+        body: JSON.stringify({ title: title, completed: completed })
     })
     .then(response => response.json())
     .then(() => fetchTodos())
